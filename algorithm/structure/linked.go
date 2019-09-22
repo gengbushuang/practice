@@ -20,6 +20,46 @@ type Linked struct {
 }
 
 func (link *Linked) Add(data interface{}) {
+	link.AddList(data)
+}
+
+func (link *Linked) Get(index int) (interface{},bool) {
+	if !link.isElementIndex(index) {
+		return nil,false
+	}
+	n := link.getNode(index)
+	return true,n.d
+}
+
+/*
+头节点添加数据
+*/
+func (link *Linked) AddFirst(data interface{}) {
+	f := link.first
+
+	newNode := &node{
+		d:data,
+		//新加入的节点后驱节点指向上个头节点
+		next:f,
+		prev:nil,
+	}
+
+	link.first = newNode
+	if f==nil {
+		//如果上次头节点是空，就跟尾节点指向同一个节点
+		link.last = newNode
+	}else{
+		//如果上次头节点不为空，把上个头节点前驱节点指向新加入节点
+		f.prev = newNode
+	}
+
+	link.size = link.size+1
+}
+
+/*
+尾节点添加数据
+*/
+func (link *Linked) AddList(data interface{}) {
 	l := link.last
 
 	newNode := &node{
@@ -35,19 +75,11 @@ func (link *Linked) Add(data interface{}) {
 		//如果上次尾节点是空，就跟头节点指向同一个节点
 		link.first = newNode
 	}else{
-		//如果上次尾节点不为空，把上个尾节点下一个节点指向新加入节点
+		//如果上次尾节点不为空，把上个尾节点后驱节点指向新加入节点
 		l.next = newNode
 	}
 
 	link.size = link.size+1
-}
-
-func (link *Linked) Get(index int) (interface{},bool) {
-	if !link.isElementIndex(index) {
-		return nil,false
-	}
-	n := link.getNode(index)
-	return true,n.d
 }
 
 
